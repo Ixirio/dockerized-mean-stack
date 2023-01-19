@@ -1,0 +1,10 @@
+# GLOBAL
+
+/.vscode
+
+# API 
+
+api/node_modules
+api/coverage
+
+# APP

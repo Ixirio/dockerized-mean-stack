@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+  api:
+    build:
+      context: ./api
+      target: build-local
+    container_name: api_local
+    ports:
+      - "81:3000"
+    volumes:
+      - "./api:/var/www/api"
+    depends_on:
+      - database
+    environment: 
+      - MONGO_URI=mongodb://projectManager:root@database
+      - DOCUMENT=ProjectManagerLocal
+
+  database:
+    image: mongo:5
+    container_name: database_local
+    volumes:
+      - db:/data/db
+    ports: 
+      - "27017:27017"
+    environment: 
+      - MONGO_INITDB_ROOT_USERNAME=projectManager
+      - MONGO_INITDB_ROOT_PASSWORD=root
+
+  front:
+    build:
+      context: ./app
+      target: build-local
+    container_name: app_local
+    ports:
+     - "80:4200"
+    volumes:
+      - "./app:/var/www/app"
+    command: bash -c "cd /var/www/app && npm start"
+
+volumes:
+  db:
